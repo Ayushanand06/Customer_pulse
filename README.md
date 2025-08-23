@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Customer Pulse ❤️
 
-## Getting Started
+A comprehensive Streamlit application for customer satisfaction analysis and prediction.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Data Insights**: Interactive exploratory data analysis with dynamic visualizations
+- **Live Prediction**: Real-time satisfaction score predictions for individual customers
+- **Bulk Forecasting**: Batch predictions for entire customer datasets
+- **Export Ready**: Download prediction results as CSV files
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📦 Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Install required dependencies:
+\`\`\`bash
+pip install -r requirements.txt
+\`\`\`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Set up the project (train model and generate sample data):
+\`\`\`bash
+python scripts/setup_project.py
+\`\`\`
 
-## Learn More
+3. Run the Streamlit application:
+\`\`\`bash
+streamlit run app.py
+\`\`\`
 
-To learn more about Next.js, take a look at the following resources:
+## 🏗️ Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+\`\`\`
+customer-pulse/
+├── app.py                              # Main Streamlit application
+├── train_model.py                      # Model training script
+├── requirements.txt                    # Python dependencies
+├── customer_pulse_model.pkl           # Trained model (generated)
+├── customer_feedback_satisfaction.csv # Dataset (generated)
+├── scripts/
+│   └── setup_project.py              # Project setup script
+└── README.md                         # This file
+\`\`\`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🎯 Usage
 
-## Deploy on Vercel
+### Training the Model
+The model follows the "Train Once, Use Everywhere" principle:
+- Run `train_model.py` once to create the model and sample dataset
+- The Streamlit app loads the pre-trained model for fast predictions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Using the Application
+1. **Home**: Overview and introduction to Customer Pulse
+2. **Data Insights**: Explore customer data with interactive visualizations
+3. **Live Prediction**: Get instant satisfaction predictions for individual customers
+4. **Bulk Forecasting**: Upload CSV files for batch predictions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📊 Required CSV Format for Bulk Predictions
+
+Your CSV file must contain these columns:
+- `Age`: Customer age (18-100)
+- `Income`: Annual income in dollars
+- `ProductQuality`: Product quality rating (1-10)
+- `ServiceQuality`: Service quality rating (1-10)
+- `PurchaseFrequency`: Number of purchases per year
+- `Gender`: Male, Female, or Other
+- `Country`: Customer's country
+- `FeedbackScore`: Poor, Fair, Good, or Excellent
+- `LoyaltyLevel`: Bronze, Silver, Gold, or Platinum
+
+## 🤖 Model Details
+
+- **Algorithm**: Gradient Boosting Regressor
+- **Features**: 9 customer attributes (5 numerical, 4 categorical)
+- **Target**: Customer satisfaction score (0-100)
+- **Preprocessing**: StandardScaler for numerical, OneHotEncoder for categorical
+
+## 🛠️ Technical Requirements
+
+- Python 3.8+
+- Streamlit 1.28.0+
+- scikit-learn 1.3.0+
+- pandas 2.0.3+
+- matplotlib 3.7.2+
+- seaborn 0.12.2+
+
+## 📈 Performance
+
+The application uses Streamlit caching for optimal performance:
+- `@st.cache_resource` for model loading
+- `@st.cache_data` for dataset loading
+- Fast predictions without model retraining
