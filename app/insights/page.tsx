@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+// FIX: Changed to use underscore to match your filename
 import { PlotViewer } from "@/components/plot_viewer"
 
 const plotOptions = [

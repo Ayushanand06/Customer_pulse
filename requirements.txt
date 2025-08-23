@@ -1,6 +1,7 @@
 # Web Framework
 fastapi==0.104.1
 uvicorn[standard]==0.24.0.post1
+gunicorn==21.2.0
 
 # Data & Machine Learning
 pandas==2.0.3
@@ -14,5 +15,3 @@ seaborn==0.12.2
 
 # Data Validation
 pydantic==2.5.2
-# In requirements.txt
-gunicorn==21.2.0

@@ -1,13 +1,11 @@
+// File: app/api/predict_sigle/route.ts
 import { type NextRequest, NextResponse } from "next/server";
 
-// The URL of your running Python API server
 const PYTHON_API_URL = process.env.PYTHON_API_URL + "/predict_sigle";
 
 export async function POST(request: NextRequest) {
   try {
     const customerData = await request.json();
-
-    // Forward the request to the real Python ML backend
     const apiResponse = await fetch(PYTHON_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -19,12 +17,10 @@ export async function POST(request: NextRequest) {
       console.error("Python API Error:", errorBody);
       throw new Error(`Prediction API failed with status ${apiResponse.status}`);
     }
-
     const predictionResult = await apiResponse.json();
     return NextResponse.json(predictionResult);
-
   } catch (error) {
     console.error("Error in Next.js predict-single route:", error);
-    return NextResponse.json({ error: "Prediction failed due to an internal error" }, { status: 500 });
+    return NextResponse.json({ error: "Prediction failed" }, { status: 500 });
   }
 }
