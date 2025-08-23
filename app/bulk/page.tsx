@@ -1,15 +1,19 @@
+// File: app/bulk/page.tsx
+
 "use client"
 
 import type React from "react"
-
 import { useState, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Upload, Download, FileText, AlertCircle, CheckCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
+// FIX: Define a specific type for CSV row objects to avoid using 'any'
+type CsvRow = { [key: string]: string | number };
+
 interface BulkResult {
-  data: any[]
+  data: CsvRow[] // FIX: Use the new, more specific type
   filename: string
 }
 
@@ -21,15 +25,8 @@ export default function BulkPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const requiredColumns = [
-    "Age",
-    "Income",
-    "ProductQuality",
-    "ServiceQuality",
-    "PurchaseFrequency",
-    "Gender",
-    "Country",
-    "FeedbackScore",
-    "LoyaltyLevel",
+    "Age", "Income", "ProductQuality", "ServiceQuality", "PurchaseFrequency",
+    "Gender", "Country", "FeedbackScore", "LoyaltyLevel",
   ]
 
   const handleFileSelect = (selectedFile: File) => {
@@ -73,11 +70,11 @@ export default function BulkPage() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
+        // FIX: Provide a type for the error data object
+        const errorData: { error?: string } = await response.json()
         throw new Error(errorData.error || "Upload failed")
       }
 
-      // Handle CSV response
       const csvText = await response.text()
       const rows = csvText.split("\n").map((row) => row.split(","))
       const headers = rows[0]
@@ -85,7 +82,8 @@ export default function BulkPage() {
 
       setResult({
         data: data.map((row) => {
-          const obj: any = {}
+          // FIX: Define the object with the specific CsvRow type
+          const obj: CsvRow = {}
           headers.forEach((header, index) => {
             obj[header] = row[index]
           })
@@ -93,8 +91,13 @@ export default function BulkPage() {
         }),
         filename: `predictions_${file.name}`,
       })
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      // FIX: Type the caught error to avoid using implicit 'any'
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("An unknown error occurred")
+      }
     } finally {
       setIsProcessing(false)
     }
@@ -173,7 +176,7 @@ export default function BulkPage() {
               <input ref={fileInputRef} type="file" accept=".csv" onChange={handleFileInput} className="hidden" />
 
               {error && (
-                <Alert className="mt-4">
+                <Alert variant="destructive" className="mt-4">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>

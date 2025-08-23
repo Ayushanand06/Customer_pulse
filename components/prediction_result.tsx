@@ -1,3 +1,5 @@
+// File: components/prediction-result.tsx
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { TrendingUp, TrendingDown, Minus } from "lucide-react"
@@ -16,7 +18,8 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64 text-gray-500">
-          Configure customer details and click "Predict Satisfaction" to see results
+          {/* FIX: Changed double quotes to single quotes */}
+          Configure customer details and click 'Predict Satisfaction' to see results
         </CardContent>
       </Card>
     )
@@ -51,7 +54,8 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
     }
   }
 
-  const getAdvice = (score: number, category: string) => {
+  // FIX: Removed the unused 'category' parameter
+  const getAdvice = (score: number) => {
     if (score >= 80) {
       return "Excellent! This customer is highly satisfied. Consider them for loyalty programs or referral incentives."
     } else if (score >= 60) {
@@ -116,7 +120,7 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
         {/* Advice */}
         <div className="bg-blue-50 rounded-lg p-4">
           <h4 className="font-medium text-blue-900 mb-2">Recommended Action</h4>
-          <p className="text-sm text-blue-800">{getAdvice(predicted_score, score_category)}</p>
+          <p className="text-sm text-blue-800">{getAdvice(predicted_score)}</p>
         </div>
 
         {/* Score Breakdown */}
