@@ -1,8 +1,10 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { json2csv } from "json-2-csv"; // You will need to install this!
+// File: app/api/predict_bulk/route.ts
 
-// The URL of your running Python API server
-const PYTHON_API_URL = process.env.PYTHON_API_URL + "/predict_bulk";
+import { type NextRequest, NextResponse } from "next/server";
+import { json2csv } from "json-2-csv";
+
+// I'm assuming you want to keep the URL with the underscore to match your Python file
+const PYTHON_API_URL = process.env.PYTHON_API_URL + "/predict_bulk"; 
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,19 +18,19 @@ export async function POST(request: NextRequest) {
     const text = await file.text();
     const lines = text.split("\n").filter(line => line.trim() !== '');
     const headers = lines[0].split(",").map(h => h.trim().replace(/"/g, ''));
-
-    // Convert CSV text to a JSON array of objects
+    
     const jsonData = lines.slice(1).map(line => {
       const values = line.split(",");
-      const obj: { [key: string]: any } = {};
+      // FIX: Define a specific type for the object to avoid 'any'
+      const obj: { [key: string]: string | number } = {};
       headers.forEach((header, index) => {
         const value = values[index]?.trim().replace(/"/g, '') || '';
+        // Check if value is a number before converting
         obj[header] = !isNaN(Number(value)) && value !== '' ? Number(value) : value;
       });
       return obj;
     });
 
-    // Call the real Python ML backend with the JSON data
     const apiResponse = await fetch(PYTHON_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -36,14 +38,12 @@ export async function POST(request: NextRequest) {
     });
 
     if (!apiResponse.ok) {
-      const errorBody = await apiResponse.text();
-      console.error("Python API Error:", errorBody);
-      throw new Error(`Prediction API failed with status ${apiResponse.status}`);
+        const errorBody = await apiResponse.text();
+        console.error("Python API Error:", errorBody);
+        throw new Error(`Prediction API failed with status ${apiResponse.status}`);
     }
 
     const resultsJson = await apiResponse.json();
-
-    // Convert the JSON response back to CSV for download
     const csvContent = await json2csv(resultsJson, {});
 
     return new NextResponse(csvContent, {
@@ -54,6 +54,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error in Next.js predict-bulk route:", error);
-    return NextResponse.json({ error: "Processing failed due to an internal error" }, { status: 500 });
+    return NextResponse.json({ error: "Processing failed" }, { status: 500 });
   }
 }

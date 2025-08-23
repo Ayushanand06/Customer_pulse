@@ -18,8 +18,8 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64 text-gray-500">
-          {/* FIX: Changed double quotes to single quotes */}
-          Configure customer details and click 'Predict Satisfaction' to see results
+          {/* FIX: Removed the quotes to satisfy the react/no-unescaped-entities rule */}
+          Configure customer details and click Predict Satisfaction to see results
         </CardContent>
       </Card>
     )
@@ -54,7 +54,6 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
     }
   }
 
-  // FIX: Removed the unused 'category' parameter
   const getAdvice = (score: number) => {
     if (score >= 80) {
       return "Excellent! This customer is highly satisfied. Consider them for loyalty programs or referral incentives."
