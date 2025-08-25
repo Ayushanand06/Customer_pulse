@@ -1,45 +1,3 @@
-// File: app/predict/page.tsx
-"use client"
-
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { PredictionResult } from "@/components/prediction_result"
-import { Loader2 } from "lucide-react"
-
-// ... (interfaces are the same)
-
-export default function PredictPage() {
-  // ... (useState hooks are the same)
-
-  const handlePredict = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("/api/predict_sigle", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(customerData),
-      });
-      if (!response.ok) {
-        throw new Error("Prediction failed");
-      }
-      const result = await response.json();
-      setPrediction(result);
-    } catch (_err) { // Fixed ESLint warning
-      setError("Failed to generate prediction. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // ... (isFormValid and the rest of the return JSX is the same, with the <SelectTrigger> typo fixed)
-}
-// NOTE: I'm providing the full component below for easy copy-paste
 "use client"
 
 import { useState } from "react"
@@ -103,7 +61,7 @@ export default function PredictPage() {
 
       const result = await response.json()
       setPrediction(result)
-    } catch (_err) {
+    } catch (_err) { // FIX: Changed 'err' to '_err' to solve unused variable warning
       setError("Failed to generate prediction. Please try again.")
     } finally {
       setIsLoading(false)
