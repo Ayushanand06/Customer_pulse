@@ -1,6 +1,6 @@
 # Customer Pulse 
 
-A comprehensive Streamlit application for customer satisfaction analysis and prediction.
+A comprehensive application for customer satisfaction analysis and prediction.
 
 ## 🚀 Features
 
